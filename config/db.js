@@ -1,17 +1,16 @@
-const sequelize= require('./seq')
-const colors= require('colors')
+const sequelize = require('./seq');
+const colors = require('colors');
 
-//funcion para conectarse a la base de datos
+// Componente funcion para 
+// Conectarme a la base de datos
 
-const connectDB= async ()=>{
-    try {
-        await sequelize.authenticate()
-        console.log('Conectado al servidor mysql'.bgGreen.white)
-
-    } catch (error) {
-        console.log(error)
+const connectDB = async ()=> {
+    try{
+        await sequelize.authenticate()    
+        console.log('Conectado a servidor mysql'.yellow.bgGreen.bold)
+    }catch(error){
+        console.log(error);
     }
-    
 }
 
-module.exports = connectDB
+module.exports = connectDB;

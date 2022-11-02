@@ -1,40 +1,37 @@
-//crear la dependecia a expres
-const express =require('express')
-const clors =require('colors')
-const dotenv =require('dotenv')
-const connectDB= require('./config/db')
-const listEndpoints =require('express-list-endpoints')
-//dependencia a las rutas
-const boocampRoutes = require('./routes/BootcamspRoutes')
-const cursopRoutes = require('./routes/CursoRoutes')
-const UsersRoutes = require('./routes/UsersRoutes')
+//1. crear la depencia a express, colors, dotenv
+const express = require('express');
+const colors = require('colors');
+const dotenv = require('dotenv');
+const connectDB = require('./config/db');
+const listEndpoints = require('express-list-endpoints');
+const userRoutes = require('./Routes/UserRoutes');
+const bootcampRoutes = require('./Routes/BootcampRoutes');
+const courseRoutes = require('./Routes/CoursesRoutes');
+const reviewRoutes = require('./Routes/ReviewsRoutes');
+    
+    //Definiendo archivo .env
+    dotenv.config({
+        path: './Config/config.env'
+    })
+    //crear el objeto app con express
+    const app = express();
 
-const app= express()
+    //Habilitar express para tratar datos
+    //content-type-json
+    app.use(express.json())
 
-//conectar a base de datos 
+    // Conectar a la base de datos
+    connectDB()
+    
+    // Definiendo las rutas de prueba 
+    app.use('/api/v1/bootcamps', bootcampRoutes)
+    app.use('/api/v1/courses', courseRoutes)
+    app.use('/api/v1/reviews', reviewRoutes)
+    app.use('/api/v1/users', userRoutes)
 
-connectDB()
-
-//relacionar rutas de dominio
-app.use('/api/v1/bootcamps', boocampRoutes)
-
-app.use('/api/v1/cursos', cursopRoutes)
-
-app.use('/api/v1/user', UsersRoutes)
-
-app.get('/', (request, response)=>{
-    response.send('ruta funcionando')
+    //consultar endpoints del proyecto
+    console.log(listEndpoints(app));
+    //iniciar el devserver
+app.listen(process.env.PORT , ()=>{
+    console.log('Servidor iniciado'.bgGreen.white);
 })
-
-dotenv.config({
-    path: './config/config.env'
-})
-
-//listar rutas
-
-console.log(listEndpoints(app))
-
-app.listen(process.env.PORT, ()=>{
-    console.log(`servidor iniciado en el puerto: ${process.env.PORT}   `.bgGreen.white)
-})
-

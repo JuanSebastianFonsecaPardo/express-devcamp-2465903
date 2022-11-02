@@ -1,30 +1,68 @@
-const { DataTypes } = require('sequelize')
-const UserModel = require('../models/user')
-const sequelize = require('../config/seq')
+const { DataTypes } = require("sequelize");
+const UserModel = require('../models/user');
+const sequelize = require('../config/seq');
 
+//Crear un objeto user
 const User = UserModel(sequelize, DataTypes)
+//Listar todos los bootcamps
+    exports.getAllUsers =  async(req , res)=>{
+        const allUsers = await User.findAll()
+        res
+        .status(200)
+        .json({
+            "success" : true,
+            "data": allUsers
+        })
+    }
 
-exports.getUsers= async((req, res)=>{
-    const allUsers =await User.findAll()
-    res.status(200).json({"success" : true, "data" :allUsers})
-})
+//Listar un bootcamp por id
+    exports.getSingleUser = async (req, res)=>{
+        const SingleUser = await User.findByPk(req.params.id)
+        res
+        .status(200)
+        .json({
+            "success" : true,
+            "data" :  SingleUser          
+        })           
+    }
 
-exports.getSingleUsers=((req, res)=>{
-    res.status(200).json({"success" : true, "data" :`Sibgle user ${req.params.id}`})
-})
-
-exports.getAllUsers=((req, res)=>{
-    res.status(200).json({"success" : true, "data" :`All Users`})
-})
-
-exports.CreateUsers=((req, res)=>{
-    res.status(201).json({"success" : true, "data" :`Create Users`})
-})
-
-exports.UpdateUsers=((req, res)=>{
-    res.status(201).json({"success" : true, "data" :`Update user ${req.params.id}`})
-})
-
-exports.DeleteUsers=((req, res)=>{
-    res.status(201).json({"success" : true, "data" :`Delete user ${req.params.id}`})
-})
+//Crear un bootcamp
+    exports.createUser = async(req, res)=>{
+        const createUser = await User.create(req.body);
+        res
+        .status(201)
+        .json({
+            "success" : true,
+            "data": createUser
+        })
+    }
+//Actualizar un bootcamp por id
+    exports.updateUser = async(req, res)=>{
+        await User.update(req.body ,{
+        where: {
+          id : req.params.id
+        }
+      });
+      const SingleUser = await User.findByPk(req.params.id)
+      res
+        .status(200)
+        .json({
+            "success" : true,
+            "data": SingleUser
+        })
+    }
+//Borrar un bootcamp por id
+    exports.deleteUser = async(req, res)=>{
+        await User.destroy({
+            where: {
+              id: req.params.id
+            }
+          });
+          const SingleUser = await User.findByPk(req.params.id)
+        res
+        .status(200)
+        .json({
+            "success" : true,
+            "data": `El usuario de id : ${req.params.id} fue borrado`
+        })
+    }
